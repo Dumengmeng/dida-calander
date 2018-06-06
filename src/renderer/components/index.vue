@@ -14,7 +14,7 @@
             <span class="countday">今年第<i>{{dayCount}}</i>天</span>
         </div>
 
-        <content>
+        <content :style="{backgroundImage: (bingImg)}">
             <ul class="week">
                 <li v-for="(item, index) in weekArr" :key="index">{{item}}</li>
             </ul>
@@ -38,9 +38,9 @@ export default {
             week: NOW.getDay(),                
             month: NOW.getMonth() + 1,
             year: NOW.getFullYear(),
-            weekArr: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
             dayType1: [31,29,31,30,31,30,31,31,30,31,30,31],
             dayType2: [31,28,31,30,31,30,31,31,30,31,30,31],
+            weekArr: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
         }
     },
     computed: {
@@ -58,6 +58,10 @@ export default {
                 }
             })
             return sum + this.day
+        },
+        bingImg() {
+            // https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1
+            return 1
         }
     },
     mounted() {
@@ -135,16 +139,21 @@ export default {
 
     content{
         
+        
         .week{
             display: flex;
             line-height: 30px;
             justify-content: space-around;
             border-bottom: 1px solid #ddd;
         }
+
+
     }
 
 }
 
 </style>
+
+
 
 
