@@ -19,7 +19,9 @@
                 <li v-for="(item, index) in weekArr" :key="index">{{item}}</li>
             </ul>
             <ul class="days">
-                <li></li>
+                <!-- <div v-for="(week, idx) in weekArr" :key="idx"> -->
+                        <li class="day_item" v-for="(item, idx) in daysArr" :key="idx">{{item}}</li>
+                <!-- </div> -->
             </ul>
         </content>
 
@@ -44,15 +46,9 @@ export default {
         }
     },
     computed: {
-        isLeapYear() {
-            return ( this.year % 4 == 0 || this.year % 400 == 0 ) && this.year % 100 != 0 
-        },
-        dayType() {
-            return this.isLeapYear ? this.dayType2 : this.dayType1
-        },
         dayCount() {
             let sum = 0
-            this.dayType.forEach((item, index) => {
+            this.dayType(this.year).forEach((item, index) => {
                 if (index < this.month) {
                     sum += item
                 }
@@ -62,12 +58,57 @@ export default {
         bingImg() {
             // https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1
             return 1
-        }
+        },
+        daysArr() {
+            return this._getDaysArrbyGivenMonth(this.year, this.month)
+        },
     },
     mounted() {
-
+        
     },
     methods: {
+        isLeapYear(year) {
+            return ( year % 4 == 0 || year % 400 == 0 ) && year % 100 != 0 
+        },
+        dayType(year) {
+            return this.isLeapYear(year) ? this.dayType2 : this.dayType1
+        },
+        _getDaysArrbyGivenMonth(year, month) {
+            // console.log(year, month, this.dayType(year))
+            const dayType = this.dayType(year),
+                preMonthDays = dayType[month - 2],
+                thisMonthDays = dayType[month - 1],
+                nextMonthDays = dayType[month]
+            // console.log(sumDaysofMon)
+
+            let daysArr = [], preDaysArr = [], nextDaysArr = []
+            for (let i = 1; i <= thisMonthDays; i++) {
+                daysArr.push(i)
+            }
+            for (let i = 1; i <= preMonthDays; i++) {
+                preDaysArr.push(i)
+            }
+            for (let i = 1; i <= nextMonthDays; i++) {
+                nextDaysArr.push(i)
+            }
+
+            const tWeek = new Date(`${year}-${month}`).getDay()
+
+            // 补上 上个月的天数
+            if (tWeek !== 0) {
+                const pDaysArr = preDaysArr.slice(preDaysArr.length - tWeek, preDaysArr.length)
+                daysArr = pDaysArr.concat(daysArr)
+            }
+            // console.log(daysArr.length)
+
+            // 补上 下个月的天数
+            if (daysArr.length % 7 > 0) {
+                const nDaysArr = nextDaysArr.slice(0, daysArr.length % 7)
+                daysArr.push(nDaysArr)
+            }
+            
+            return daysArr
+        }
         
     },
 }
@@ -145,6 +186,15 @@ export default {
             line-height: 30px;
             justify-content: space-around;
             border-bottom: 1px solid #ddd;
+        }
+
+        .days{
+            text-align: center;
+
+            .day_item{
+                display: inline-block;
+                width: 14.2857%;
+            }
         }
 
 
