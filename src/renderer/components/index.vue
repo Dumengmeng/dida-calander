@@ -9,12 +9,13 @@
             </div>
         </header>
 
-        <div class="top">
-            <span class="now_time">{{year}}年{{month}}月</span>
-            <span class="countday">今年第<i>{{dayCount}}</i>天</span>
-        </div>
+        <div class="wrapper" :style="{'background-image': `url(${bingImgUrl})`}">
+            
+            <div class="top">
+                <span class="now_time">{{year}}年{{month}}月</span>
+                <span class="countday">今年第<i>{{dayCount}}</i>天</span>
+            </div>
 
-        <content :style="{backgroundImage: (bingImg)}">
             <ul class="week">
                 <li v-for="(item, index) in weekArr" :key="index">{{item}}</li>
             </ul>
@@ -23,12 +24,14 @@
                         <li class="day_item" v-for="(item, idx) in daysArr" :key="idx">{{item}}</li>
                 <!-- </div> -->
             </ul>
-        </content>
+        </div>
 
     </div>
 </template>
 
 <script>
+
+import axios from 'axios'
 
 const NOW = new Date()
 
@@ -43,6 +46,8 @@ export default {
             dayType1: [31,29,31,30,31,30,31,31,30,31,30,31],
             dayType2: [31,28,31,30,31,30,31,31,30,31,30,31],
             weekArr: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+
+            bingImgUrl: '',
         }
     },
     computed: {
@@ -55,23 +60,33 @@ export default {
             })
             return sum + this.day
         },
-        bingImg() {
-            // https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1
-            return 1
-        },
         daysArr() {
             return this._getDaysArrbyGivenMonth(this.year, this.month)
         },
     },
     mounted() {
-        
+        this.init()
     },
     methods: {
+        init() {
+            this.getBingImg()
+        },
         isLeapYear(year) {
             return ( year % 4 == 0 || year % 400 == 0 ) && year % 100 != 0 
         },
         dayType(year) {
             return this.isLeapYear(year) ? this.dayType2 : this.dayType1
+        },
+        getBingImg() {
+            // TODO 跨域
+            const getBingImgApi = 'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1'
+            axios.get(getBingImgApi).then(res => {
+                this.bingImgUrl = `https://cn.bing.com/${res.data.images[0].url}`
+            }).catch(err => {
+                console.log('getbingimg:', err)
+                this.bingImgUrl = 'https://cn.bing.com/az/hprichbg/rb/WhalePod_ZH-CN9101375608_1920x1080.jpg'
+                // this.bingImgUrl = 'https://cn.bing.com/az/hprichbg/rb/PenaNationalPalace_ZH-CN12058841312_1920x1080.jpg'
+            })
         },
         _getDaysArrbyGivenMonth(year, month) {
             // console.log(year, month, this.dayType(year))
@@ -178,8 +193,13 @@ export default {
         }
     }
 
-    content{
-        
+    .wrapper{
+        // TODO 磨砂背景样式
+        position: fixed;
+        top: 38px;
+        width: 100%;
+        bottom: 0;
+        background-size: cover;
         
         .week{
             display: flex;
@@ -189,11 +209,26 @@ export default {
         }
 
         .days{
+            position: fixed;
+            display: flex;
+            top: 84px;
+            width: 100%;
+            bottom: 0;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            align-items: center;
             text-align: center;
 
             .day_item{
                 display: inline-block;
                 width: 14.2857%;
+                // width: 14.1%;
+                // border-right: 1px solid #ddd;
+                // border-bottom: 1px solid #ddd;
+
+                &:nth-child(7n){
+                    // border-right: 0;
+                }
             }
         }
 
