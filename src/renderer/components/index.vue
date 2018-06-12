@@ -32,6 +32,7 @@
 <script>
 
 import axios from 'axios'
+import { ipcRenderer, net } from 'electron'
 
 const NOW = new Date()
 
@@ -66,6 +67,12 @@ export default {
     },
     mounted() {
         this.init()
+
+        ipcRenderer.on('sync-replay', (event, arg) => {
+            console.log('renderer receive:', arg + new Date())
+        })
+
+        ipcRenderer.send('sync-msg', 'aaa')
     },
     methods: {
         init() {
@@ -78,7 +85,6 @@ export default {
             return this.isLeapYear(year) ? this.dayType2 : this.dayType1
         },
         getBingImg() {
-            // TODO 跨域
             const getBingImgApi = 'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1'
             axios.get(getBingImgApi).then(res => {
                 this.bingImgUrl = `https://cn.bing.com/${res.data.images[0].url}`
