@@ -14,21 +14,6 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-
-const getBingImg = () => {
-  const getBingImgApi = 'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1'
-  const request = net.request(getBingImgApi)
-  request.on('response', (response) => {
-      response.on('data', (chunk) => {
-          console.log(`BODY: ${chunk}`)
-      })
-      response.on('end', () => {
-          console.log('No more data in response.')
-      })
-  })
-  request.end()
-}
-
 function createWindow() {
   /**
    * Initial window options
@@ -40,6 +25,9 @@ function createWindow() {
     minWidth: 300,
     minHeight: 400,
     titleBarStyle: 'hiddenInset',
+    webPreferences: {
+      webSecurity: false, // 禁用同源策略
+    }
   })
 
   mainWindow.loadURL(winURL)
@@ -48,7 +36,6 @@ function createWindow() {
     mainWindow = null
   })
 
-  getBingImg()
   
 }
 
@@ -65,9 +52,3 @@ app.on('activate', () => {
     createWindow()
   }
 })
-
-ipcMain.on('sync-msg', (event, arg) => {
-  console.log(arg +  + new Date())
-  event.sender.send('sync-replay', 'b')
-})
-
