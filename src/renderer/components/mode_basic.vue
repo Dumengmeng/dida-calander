@@ -16,10 +16,7 @@
 
 <script>
 
-/**
- * TODO
- * 1、获取当年节假日：https://www.juhe.cn/docs/api/id/177
- */
+import API from '../../API'
 
 const NOW = new Date()
 
@@ -50,12 +47,24 @@ export default {
             return this._getDaysArrbyGivenMonth(this.year, this.month)
         },
     },
+    mounted() {
+        this.getVocation()
+    },
     methods: {
         isLeapYear(year) {
             return ( year % 4 == 0 || year % 400 == 0 ) && year % 100 != 0 
         },
         dayType(year) {
             return this.isLeapYear(year) ? this.dayType2 : this.dayType1
+        },
+        getVocation() {
+            // TODO 爬虫获取节假日
+            API.getVocation({
+                date: this.year
+            }).then(res => {
+                // console.log(res)
+                // DOMParser.parse
+            })
         },
         _getDaysArrbyGivenMonth(year, month) {
             // console.log(year, month, this.dayType(year))

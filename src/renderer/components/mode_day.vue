@@ -4,20 +4,20 @@
 
 
 <script>
-/**
- * 1、老黄历：https://www.juhe.cn/docs/api/id/65
- * 2、历史上的今天： https://www.juhe.cn/docs/api/id/63
- */
-
-import axios from 'axios'
+import API from '../../API'
 
 export default {
-    name:' mode_weather',
+    name:'mode_day',
     data() {
         return {
             
         }
-    }
+    },
+    mounted() {
+        // API.getOldCalendar(param).then(res => {
+            
+        // })
+    },
 
 }
 </script>

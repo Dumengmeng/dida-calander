@@ -1,19 +1,19 @@
 <template>
     <div class="container">
         <header>
-            滴答-日历
+            <span>滴答-日历</span>
             <div class="modes">
-                <span class="mode_basic" @click="changeMode(1)"></span>
-                <span class="mode_weather" @click="changeMode(2)"></span>
-                <span class="mode_day" @click="changeMode(3)"></span>
+                <span class="mode_basic" @click="changeMode(1)">base</span>
+                <span class="mode_weather" @click="changeMode(2)">weather</span>
+                <span class="mode_day" @click="changeMode(3)">day</span>
             </div>
         </header>
 
         <div class="wrapper" :style="{'background-image': `url(${bingImgUrl})`}">
 
             <mode-basic v-show="modeType === 1"></mode-basic>
-            <mode-day v-show="modeType === 2"></mode-day>
-            <mode-weather v-show="modeType === 3"></mode-weather>
+            <mode-weather v-show="modeType === 2"></mode-weather>
+            <mode-day v-show="modeType === 3"></mode-day>
 
         </div>
 
@@ -27,7 +27,9 @@ import ModeDay from './mode_day'
 import ModeWeather from './mode_weather'
 import axios from 'axios'
 
+
 // TODO 获取用户的定位 若不进行定位则默认为上海
+// pc端与h5端场景不同，无需自动定位，直接让用户手动选择城市，并将该信息存储起来，若要更改，直接在设置中切换
 
 const DEFAULT_IMG = 'https://cn.bing.com/az/hprichbg/rb/WhalePod_ZH-CN9101375608_1920x1080.jpg'// 默认图片地址
 
@@ -41,6 +43,12 @@ export default {
     },
     mounted() {
         this.init()
+
+        //测试缓存
+        this.$nextTick(() => {
+            // console.log(window)
+            // sessionStorage.setItem('aaa', '123')
+        })
     },
     methods: {
         init() {
