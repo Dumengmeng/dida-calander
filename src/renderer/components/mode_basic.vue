@@ -9,7 +9,7 @@
             <li v-for="(item, index) in weekArr" :key="index">{{item}}</li>
         </ul>
         <ul class="days">
-            <li class="day_item" v-for="(item, idx) in daysArr" :key="idx">{{item}}</li>
+            <li class="day_item" :class="{'today_item': item === day}" v-for="(item, idx) in daysArr" :key="idx">{{item}}</li>
         </ul>
     </div>
 </template>
@@ -110,6 +110,11 @@ export default {
 
 .mode_basic{
 
+    .top{
+        margin-bottom: 4px; 
+        font-size: 16px;
+    }
+
     .week{
         display: flex;
         line-height: 30px;
@@ -121,7 +126,8 @@ export default {
         position: fixed;
         display: flex;
         top: 84px;
-        width: 100%;
+        left: 0;
+        right: 0;
         bottom: 0;
         justify-content: space-around;
         flex-wrap: wrap;
@@ -138,6 +144,10 @@ export default {
             &:nth-child(7n){
                 // border-right: 0;
             }
+        }
+
+        .today_item{
+            color: red;
         }
     }
 }

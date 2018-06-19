@@ -10,7 +10,7 @@
         </header>
 
         <div class="wrapper" :style="{'background-image': `url(${bingImgUrl})`}">
-
+                
             <mode-basic v-show="modeType === 1"></mode-basic>
             <mode-weather v-show="modeType === 2"></mode-weather>
             <mode-day v-show="modeType === 3"></mode-day>
@@ -96,7 +96,8 @@ export default {
     }
 
     i{
-        font-stretch: normal;
+        // font-stretch: normal;
+        font-style: normal;
     }
 
     header{
@@ -146,11 +147,31 @@ export default {
 
     .wrapper{
         // TODO 磨砂背景样式
+        padding: 20px;
         position: fixed;
         top: 38px;
-        width: 100%;
+        left: 0;
+        right: 0;
         bottom: 0;
         background-size: cover;
+        background: hsla(0,0%,100%,.3);
+        overflow: hidden;
+
+        &:before{
+            // margin: -30px;
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: -1;
+            filter: blur(10px);
+            background: url(https://cn.bing.com//az/hprichbg/rb/CypressPygmyOwl_ZH-CN12382299143_1920x1080.jpg);
+            // background: rgba(255, 0, 0, .5);
+            
+        }
+
         
     }
 

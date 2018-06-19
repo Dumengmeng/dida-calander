@@ -5,9 +5,10 @@
             <span class="countday">今年第<i>{{dayCount}}</i>天</span>
 
             <div class="search_box">
-                <select name="city" id="city" v-model="cityInfo">
+                <select name="city" id="city" v-model="cityInfo" @change="changeCity()">
                     <option :value="{cityId: item.id, cityName: item.name}" v-for="(item, index) in cityList" :key="index">{{item.name}}</option>
                 </select>
+                <input class="vir_input" type="text" :placeholder="cityInfo.cityName" @keyup="search()">
             </div>
         </div>
 
@@ -87,13 +88,11 @@ export default {
             weatherData: [],
             guidData: {},
             showDialog: false, // 是否展示弹框
-            cityInfo: {
-                cityId: 101020100,
-                cityName: '上海',
-            },
+            cityInfo: {},
         }
     },
     mounted() {
+        this.init()
         this.getCityList()
     },
     computed: {
@@ -120,14 +119,18 @@ export default {
         },
     },
     watch: {
-        cityInfo(val, valN) {
-            console.log(val, valN)
-            localStorage.setItem('cityId', valN.cityId)
-            localStorage.setItem('cityName', valN.cityName)
-            this.getWeather(valN)
+        cityInfo(newVal, oldVal) {
+            console.log(newVal, oldVal)
+            localStorage.setItem('cityId', newVal.cityId)
+            localStorage.setItem('cityName', newVal.cityName)
+            this.getWeather(newVal.cityId)
         }
     },
     methods: {
+        init() {
+            this.cityInfo.cityId = localStorage.getItem('cityId') || 101020100
+            this.cityInfo.cityName = localStorage.getItem('cityName') || '上海'
+        },
         isLeapYear(year) {
             return ( year % 4 == 0 || year % 400 == 0 ) && year % 100 != 0 
         },
@@ -162,6 +165,14 @@ export default {
         },
         hideGuidInfo() {
             this.showDialog = false
+        },
+        changeCity() {
+            console.log('changeval')
+        },
+        search() {
+            // 事件节流
+            // 可根据拼音、汉字查询
+            console.log('keyup')
         },
         _getDaysArrbyGivenMonth(year, month) {
             const dayType = this.dayType(year),
@@ -214,10 +225,22 @@ export default {
     .top{
 
         .search_box{
+            position: relative;
             display: inline-block;
 
             select{
                 width: 80px;
+            }
+
+            .vir_input{
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: inline-block;
+                width: 56px;
+                background-color: #fff;
+                height: 13px;
+                z-index: 2;
             }
         }
 
