@@ -1,19 +1,23 @@
 <template>
     <div class="container">
         <header>
-            <span>滴答-日历</span>
-            <div class="modes">
-                <span class="mode_basic" @click="changeMode(1)">base</span>
-                <span class="mode_weather" @click="changeMode(2)">weather</span>
-                <span class="mode_day" @click="changeMode(3)">day</span>
+            <div class="title">
+                <h3>滴答-日历</h3>
+                <div class="modes">
+                    <span class="mode_basic" @click="changeMode(1)">日历</span>
+                    <span class="mode_weather" @click="changeMode(2)">天气</span>
+                    <!-- <span class="mode_day" @click="changeMode(3)">day</span> -->
+                </div>
             </div>
         </header>
 
         <div class="wrapper" :style="{'background-image': `url(${bingImgUrl})`}">
                 
-            <mode-basic v-show="modeType === 1"></mode-basic>
-            <mode-weather v-show="modeType === 2"></mode-weather>
-            <mode-day v-show="modeType === 3"></mode-day>
+            <div class="shadow">
+                <mode-basic v-show="modeType === 1"></mode-basic>
+                <mode-weather v-show="modeType === 2"></mode-weather>
+                <!-- <mode-day v-show="modeType === 3"></mode-day> -->
+            </div>
 
         </div>
 
@@ -39,6 +43,13 @@ export default {
         return{
             bingImgUrl: '',
             modeType: 1, // 初始的tab为basic模式
+            isMoveTop: false,
+        }
+    },
+    watch: {
+        modeType(val) {
+            console.log('watch')
+            // return this.modeType === 1
         }
     },
     mounted() {
@@ -85,6 +96,11 @@ export default {
     color: rgb(63, 48, 36);
     background-color: rgb(255, 255, 255);
 
+    h3{
+        margin: 0;
+        padding: 0;
+    }
+
     span{
         display: inline-block;
     }
@@ -103,76 +119,105 @@ export default {
     header{
         position: relative;
         margin: 0;
+        height: 38px;
         line-height: 38px;
         text-align: center;
         -webkit-app-region: drag;
         background: linear-gradient(to top, rgba(211, 209, 211, 1), rgba(230, 230, 230, 1));
         // background: linear-gradient(to top, rgba(239, 239, 248, 1), rgba(239, 239, 248, .1));
         // border-bottom: 1px solid rgb(187, 187, 187);
-
-        .modes{
+        
+        .title{
             position: absolute;
-            right: 0;
-            bottom: 0;
-            height: 20px;
-            width: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
 
-            span{
+            .modes{
                 position: absolute;
-                bottom: 0;
-                right: -10px;
-                width: 50px;
+                right: -140px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100px;
                 height: 20px;
-                border-radius: 6px 6px 0 0;
-            }
+                border-radius: 4px;
+                overflow: hidden;
+                cursor: pointer;
 
-            .mode_basic{
-                background-color: peru;
-                right: 80px;
-            }
+                .mode_basic, .mode_weather{
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    color: #ccc;
+                    font-size: 12px;
+                    width: 50px;
+                    height: 20px;
+                    line-height: 23px;
+                    background-color: papayawhip;
+                }
 
-            .mode_weather{
-                background-color: papayawhip;
-                right: 40px;
-            }
+                .mode_weather{
+                    right: 0;
+                    left: auto;
+                }
 
-            .mode_day{
-                background-color: paleturquoise;
-                right: 0;
+                .mode_day{
+                    background-color: papayawhip;
+                }
+                
+                .cur_mode{
+                    color: #fff;
+                    background-color: peru;
+                }
             }
-
-            
         }
+        
     }
 
     .wrapper{
-        // TODO 磨砂背景样式
-        padding: 20px;
         position: fixed;
         top: 38px;
         left: 0;
         right: 0;
         bottom: 0;
+        z-index: 1;
         background-size: cover;
-        background: hsla(0,0%,100%,.3);
-        overflow: hidden;
+        background-position: center;
+        background-attachment: fixed;
 
-        &:before{
-            // margin: -30px;
-            content: '';
-            position: absolute;
-            top: 0;
+        .shadow{
+            margin: 60px;
+            padding: 20px;
+            position: fixed;
+            top: 38px;
+            left: 0;
             right: 0;
             bottom: 0;
-            left: 0;
-            z-index: -1;
-            filter: blur(10px);
-            background: url(https://cn.bing.com//az/hprichbg/rb/CypressPygmyOwl_ZH-CN12382299143_1920x1080.jpg);
-            // background: rgba(255, 0, 0, .5);
+            overflow: hidden;
+            background-color: hsla(0,0%,100%,.3);
+            border-radius: 16px;
+            color: #fff;
             
+            &:after{
+                content: '';
+                margin: -30px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: -1;
+                background-color: rgba(255, 255, 255, .8);
+                background-image: url(https://cn.bing.com//az/hprichbg/rb/HONKONG_ZH-CN11971924406_1920x1080.jpg);
+                filter: blur(20px);
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
         }
 
         
+
     }
 
 }

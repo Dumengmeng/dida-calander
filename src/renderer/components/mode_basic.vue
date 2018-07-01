@@ -97,9 +97,8 @@ export default {
             // 补上 下个月的天数
             if (daysArr.length % 7 > 0) {
                 const nDaysArr = nextDaysArr.slice(0, daysArr.length % 7)
-                daysArr.push(nDaysArr)
+                // daysArr = daysArr.concat(nDaysArr)
             }
-            
             return daysArr
         }
     }
@@ -123,13 +122,12 @@ export default {
     }
 
     .days{
-        position: fixed;
+        position: absolute;
         display: flex;
         top: 84px;
         left: 0;
         right: 0;
         bottom: 0;
-        justify-content: space-around;
         flex-wrap: wrap;
         align-items: center;
         text-align: center;
@@ -147,7 +145,9 @@ export default {
         }
 
         .today_item{
-            color: red;
+            color: yellow;
+            font-size: 20px;
+            font-weight: 700;
         }
     }
 }
