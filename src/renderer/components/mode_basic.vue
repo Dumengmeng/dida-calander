@@ -110,8 +110,20 @@ export default {
 .mode_basic{
 
     .top{
-        margin-bottom: 4px; 
-        font-size: 16px;
+        margin-bottom: 24px; 
+
+        .now_time{
+            margin-right: 10px;
+            font-size: 30px;
+        }
+
+        .countday{
+            font-size: 20px;
+
+            i{
+                margin: 0 4px;
+            }
+        }
     }
 
     .week{
@@ -124,7 +136,7 @@ export default {
     .days{
         position: absolute;
         display: flex;
-        top: 84px;
+        top: 108px;
         left: 0;
         right: 0;
         bottom: 0;

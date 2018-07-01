@@ -4,8 +4,8 @@
             <div class="title">
                 <h3>滴答-日历</h3>
                 <div class="modes">
-                    <span class="mode_basic" @click="changeMode(1)">日历</span>
-                    <span class="mode_weather" @click="changeMode(2)">天气</span>
+                    <span class="mode_basic" :class="{'cur_mode': modeType === 1}" @click="changeMode(1)">日历</span>
+                    <span class="mode_weather" :class="{'cur_mode': modeType === 2}" @click="changeMode(2)">天气</span>
                     <!-- <span class="mode_day" @click="changeMode(3)">day</span> -->
                 </div>
             </div>
