@@ -127,8 +127,9 @@ export default {
     }
 
     .week{
+        padding-bottom: 10px;
         display: flex;
-        line-height: 30px;
+        line-height: 20px;
         justify-content: space-around;
         border-bottom: 1px solid #ddd;
     }

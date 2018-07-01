@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <header>
+            <span class="clean" @mouseover="removeBg" @mouseleave="showBg"></span>
             <div class="title">
                 <h3>滴答-日历</h3>
                 <div class="modes">
@@ -12,8 +13,8 @@
         </header>
 
         <div class="wrapper" :style="{'background-image': `url(${bingImgUrl})`}">
-                
-            <div class="shadow">
+            <div class="shadow" :class="{'hideBg': isRemoveBg}">
+                <i :class="{'shadow_after': !isRemoveBg}" :style="{'background-image': `url(${bingImgUrl})`}"></i>
                 <mode-basic v-show="modeType === 1"></mode-basic>
                 <mode-weather v-show="modeType === 2"></mode-weather>
                 <!-- <mode-day v-show="modeType === 3"></mode-day> -->
@@ -44,6 +45,7 @@ export default {
             bingImgUrl: '',
             modeType: 1, // 初始的tab为basic模式
             isMoveTop: false,
+            isRemoveBg: false,
         }
     },
     watch: {
@@ -70,10 +72,20 @@ export default {
             
             axios.get(getBingImgApi).then(res => {
                 this.bingImgUrl = `https://cn.bing.com/${res.data.images[0].url}`
+                const item = document.getElementsByClassName('shadow')[0]
+                // const bItem = window.getComputedStyle(item, ":after")
+                // console.log(bItem.backgroundImage)
+                // bItem.backgroundImage = this.bingImgUrl
             }).catch(err => {
                 console.log('getbingimg:', err)
                 this.bingImgUrl = DEFAULT_IMG
             })
+        },
+        removeBg() {
+            this.isRemoveBg = true
+        },
+        showBg() {
+            this.isRemoveBg = false
         },
         changeMode(type) {
             this.modeType = type
@@ -95,6 +107,17 @@ export default {
     font-size: 14px;
     color: rgb(63, 48, 36);
     background-color: rgb(255, 255, 255);
+
+    .clean{
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        border-radius: 50%;
+        background-color: paleturquoise;
+        width: 18px;
+        height: 18px;
+    }
 
     h3{
         margin: 0;
@@ -184,6 +207,7 @@ export default {
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+        color: #fff;
 
         .shadow{
             margin: 60px;
@@ -198,7 +222,7 @@ export default {
             border-radius: 16px;
             color: #fff;
             
-            &:after{
+            .shadow_after{
                 content: '';
                 margin: -30px;
                 position: absolute;
@@ -208,12 +232,16 @@ export default {
                 left: 0;
                 z-index: -1;
                 background-color: rgba(255, 255, 255, .8);
-                background-image: url(https://cn.bing.com//az/hprichbg/rb/HONKONG_ZH-CN11971924406_1920x1080.jpg);
+                // background-image: url(https://cn.bing.com//az/hprichbg/rb/HONKONG_ZH-CN11971924406_1920x1080.jpg);
                 filter: blur(20px);
                 background-size: cover;
                 background-position: center;
                 background-attachment: fixed;
             }
+        }
+
+        .hideBg{
+            background-color: transparent;
         }
 
         
