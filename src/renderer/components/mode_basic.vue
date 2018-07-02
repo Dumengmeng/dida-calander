@@ -1,10 +1,5 @@
 <template>
     <div class="mode_basic">
-        <div class="top">
-            <span class="now_time">{{year}}年{{month}}月</span>
-            <span class="countday">今年第<i>{{dayCount}}</i>天</span>
-        </div>
-
         <ul class="week">
             <li v-for="(item, index) in weekArr" :key="index">{{item}}</li>
         </ul>
@@ -135,6 +130,7 @@ export default {
     }
 
     .days{
+        margin: 20px;
         position: absolute;
         display: flex;
         top: 108px;
@@ -161,6 +157,8 @@ export default {
             color: yellow;
             font-size: 20px;
             font-weight: 700;
+            border: 1px solid red;
+            border-radius: 50%;
         }
     }
 }

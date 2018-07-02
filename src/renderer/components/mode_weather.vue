@@ -1,10 +1,5 @@
 <template>
     <div class="mode_weather">
-        <div class="top">
-            <span class="now_time">{{year}}年{{month}}月</span>
-            <span class="countday">今年第<i>{{dayCount}}</i>天</span>
-        </div>
-
         <div class="search_box">
             <select name="city" id="city" v-model="cityInfo" @change="changeCity()">
                 <option :value="{cityId: item.id, cityName: item.name}" v-for="(item, index) in cityList" :key="index">{{item.name}}</option>
@@ -12,90 +7,45 @@
             <input class="vir_input" type="text" :placeholder="cityInfo.cityName" @keyup="search()">
         </div>
 
-        <!-- <ul class="week">
-            <li v-for="(item, index) in weekArr" :key="index">{{item}}</li>
-        </ul> -->
-        <ul class="days" v-show="false">
-            <li class="day_item" 
-                :class="{'today_item': item.date === day}"
-                v-for="(item, index) in daysArr" 
-                :key="index" 
-                @mouseenter="showGuidInfo(item.date)" 
-                @mouseleave="hideGuidInfo()">
-                {{item.date}}
-                <span v-for="(itm, idx) in weatherData" :key="idx" v-if="new Date(itm.date).getDate() === item.date">
-                    <i>{{itm.tmp_min}}℃ ~ {{itm.tmp_max}}℃</i>
-                    <i>白天：{{itm.cond_txt_d}}</i>
-                    <i>夜间：{{itm.cond_txt_n}}</i>
-                    <!-- <i>降水概率：{{itm.pop}}</i> -->
-                </span>
-
-                 <!-- 弹窗 -->
-                <div class="day_detail" v-if="item.date === day && showDialog" @mouseenter="showGuidInfo(item.date)" @mouseleave="hideGuidInfo()">
-                    <P>生活指数</P>
-                    <ul v-for="(item, index) in guidData" :key="index">
-                        <li>
-                            <span v-if="item.type === 'comf'">舒适度指数</span>
-                            <span v-else-if="item.type === 'cw'">洗车指数</span>
-                            <span v-else-if="item.type === 'drsg'">穿衣指数</span>
-                            <span v-else-if="item.type === 'flu'">感冒指数</span>
-                            <span v-else-if="item.type === 'sport'">运动指数</span>
-                            <span v-else-if="item.type === 'trav'">旅游指数</span>
-                            <span v-else-if="item.type === 'uv'">紫外线指数</span>
-                            <span v-else-if="item.type === 'air'">空气污染扩散条件指数</span>
-                            <span v-else-if="item.type === 'ac'">空调开启指数</span>
-                            <span v-else-if="item.type === 'ag'">过敏指数</span>
-                            <span v-else-if="item.type === 'gl'">太阳镜指数</span>
-                            <span v-else-if="item.type === 'mu'">化妆指数</span>
-                            <span v-else-if="item.type === 'airc'">晾晒指数</span>
-                            <span v-else-if="item.type === 'ptfc'">交通指数</span>
-                            <span v-else-if="item.type === 'fsh'">钓鱼指数</span>
-                            <span v-else-if="item.type === 'spi'">防晒指数</span>
-                            <span>{{item.brf}}</span>
-                            <span>{{item.txt}}</span>
-                        </li>
-                        <!-- <li>湿度：</li>
-                        <li>降水概率：{{item.pop}}</li> -->
-                    </ul>
-                </div>
-            </li>
-        </ul>
-
         <ul class="w_box">
             <li class="w_items" v-for="(item, index) in weatherData" :key="index">
-                <span class="w_date">{{new Date(item.date).getDate()}}</span>
+                <span class="w_date" :class="{'today': day === new Date(item.date).getDate()}" >{{new Date(item.date).getDate()}}</span>
                 <i>{{item.tmp_min}}℃ ~ {{item.tmp_max}}℃</i>
                 <i>白天：{{item.cond_txt_d}}</i>
                 <i>夜间：{{item.cond_txt_n}}</i>
+                <i>气压：{{item.pres}}</i> 
+                <i>相对湿度：{{item.hum}}%</i>
             </li>
         </ul>
 
         <div class="g_wrapper">
-            <P class="title">生活指数</P>
-            <ul class="g_box" v-for="(item, index) in guidData" :key="index">
-                <li>
-                    <span v-if="item.type === 'comf'">舒适度指数:</span>
-                    <span v-else-if="item.type === 'cw'">洗车指数:</span>
-                    <span v-else-if="item.type === 'drsg'">穿衣指数:</span>
-                    <span v-else-if="item.type === 'flu'">感冒指数:</span>
-                    <span v-else-if="item.type === 'sport'">运动指数:</span>
-                    <span v-else-if="item.type === 'trav'">旅游指数:</span>
-                    <span v-else-if="item.type === 'uv'">紫外线指数:</span>
-                    <span v-else-if="item.type === 'air'">空气污染扩散条件指数:</span>
-                    <span v-else-if="item.type === 'ac'">空调开启指数:</span>
-                    <span v-else-if="item.type === 'ag'">过敏指数:</span>
-                    <span v-else-if="item.type === 'gl'">太阳镜指数:</span>
-                    <span v-else-if="item.type === 'mu'">化妆指数:</span>
-                    <span v-else-if="item.type === 'airc'">晾晒指数:</span>
-                    <span v-else-if="item.type === 'ptfc'">交通指数:</span>
-                    <span v-else-if="item.type === 'fsh'">钓鱼指数:</span>
-                    <span v-else-if="item.type === 'spi'">防晒指数:</span>
-                    <span>{{item.brf}}</span>
-                    <span>{{item.txt}}</span>
-                </li>
-                <!-- <li>湿度：</li>
-                <li>降水概率：{{item.pop}}</li> -->
-            </ul>
+            <P class="title">今日生活指数</P>
+            <div class="g_box">
+                <ul class="g_item" v-for="(item, index) in guidData" :key="index">
+                    <li>{{index+1}}.
+                        <span v-if="item.type === 'comf'">舒适度指数：</span>
+                        <span v-else-if="item.type === 'cw'">洗车指数：</span>
+                        <span v-else-if="item.type === 'drsg'">穿衣指数：</span>
+                        <span v-else-if="item.type === 'flu'">感冒指数：</span>
+                        <span v-else-if="item.type === 'sport'">运动指数：</span>
+                        <span v-else-if="item.type === 'trav'">旅游指数：</span>
+                        <span v-else-if="item.type === 'uv'">紫外线指数：</span>
+                        <span v-else-if="item.type === 'air'">空气污染扩散条件指数：</span>
+                        <span v-else-if="item.type === 'ac'">空调开启指数：</span>
+                        <span v-else-if="item.type === 'ag'">过敏指数：</span>
+                        <span v-else-if="item.type === 'gl'">太阳镜指数：</span>
+                        <span v-else-if="item.type === 'mu'">化妆指数：</span>
+                        <span v-else-if="item.type === 'airc'">晾晒指数：</span>
+                        <span v-else-if="item.type === 'ptfc'">交通指数：</span>
+                        <span v-else-if="item.type === 'fsh'">钓鱼指数：</span>
+                        <span v-else-if="item.type === 'spi'">防晒指数：</span>
+                        <span>{{item.brf}}</span>
+                        <span class="desc">{{item.txt}}</span>
+                    </li>
+                    <!-- <li>湿度：</li>
+                    <li>降水概率：{{item.pop}}</li> -->
+                </ul>
+            </div>
         </div>
        
     </div>
@@ -249,6 +199,20 @@ export default {
 <style lang="scss" scoped>
 
 .mode_weather{
+   
+    ::-webkit-scrollbar{
+        // display: none;
+        width: 10px;
+        background:rgba(0,0,0,0.2);
+    }
+
+    ::-webkit-scrollbar-track{
+        // background:rgba(0,0,0,0.1);
+    }
+
+    ::-webkit-scrollbar-thumb{
+        background:rgba(0,0,0,0.3);
+    }
 
     .week{
         display: flex;
@@ -257,89 +221,115 @@ export default {
         border-bottom: 1px solid #ddd;
     }
 
-    .top{
+    .search_box{
+        position: absolute;
+        top: 30px;
+        right: 20px;
 
-        .search_box{
-            position: relative;
-            display: inline-block;
+        select{
+            width: 80px;
+            border-radius: 2px;
+        }
 
-            select{
-                width: 80px;
-            }
-
-            .vir_input{
-                position: absolute;
-                top: 0;
-                left: 0;
-                display: inline-block;
-                width: 56px;
-                background-color: #fff;
-                height: 13px;
-                z-index: 2;
-            }
+        .vir_input{
+            padding-left: 4px;
+            padding-top: 2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 56px;
+            background-color: #fff;
+            height: 14px;
+            z-index: 2;
+            border-radius: 2px;
+            border: 1px solid #999;
         }
     }
 
     .w_box{
         display: flex;
+        justify-content: space-around;
 
         .w_date{
             display: block;
+            position: relative;
+            font-size: 18px;
+            margin-bottom: 10px;
+            text-align: center;
         }
 
-    }
+        i{
+            margin-bottom: 2px;
+            display: block;
+        }
 
+        .w_date:before{
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translate(-50%);
+            width: 26px;
+            height: 26px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+        }
+
+        .today{
+            color: yellow;
+            font-size: 20px;
+
+            &:before{
+                content: '';
+                position: absolute;
+                top: -4px;
+                left: 50%;
+                transform: translate(-50%);
+                width: 26px;
+                height: 26px;
+                border: 1px solid red;
+                border-radius: 50%;
+            }           
+        }
+
+
+    }
+ 
     .g_wrapper{
+        margin-top: 36px;
+
         .title{
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .g_box{
+            position: absolute;
+            bottom: 30px;
+            top: 280px;
+            left: 20px;
+            right: 26px;
             overflow-y: scroll;
-        }
-    }
 
+            &:after{
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 14px;
+                background: linear-gradient( to top, form(rgba(255, 255, 255, .6)) to(rgba(255, 255, 255, .1)) );
+            }
 
+            .g_item{
+                margin-bottom: 10px;
 
-    .days{
-        position: fixed;
-        display: flex;
-        top: 84px;
-        width: 100%;
-        bottom: 0;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        align-items: center;
-        text-align: center;
-
-        .day_item{
-            position: relative;
-            display: inline-block;
-            width: 14.2857%;
-            color: #fff;
-            // width: 14.1%;
-            // border-right: 1px solid #ddd;
-            // border-bottom: 1px solid #ddd;
-
-            &:nth-child(7n){
-                // border-right: 0;
+                .desc{
+                    margin-left: 15px;
+                    margin-top: 2px;
+                    text-indent: 2em;
+                }
             }
         }
-
-        .today_item{
-            background-color: rgba($color: #000000, $alpha: .3);
-        }
-    }
-
-    .day_detail{
-        position: absolute;
-        top: 0;
-        left: 60px;
-        background-color: rgba($color: #000000, $alpha: .5);
-        z-index: 1;
-        width: 200px;
-        height: 200px;
-        overflow-y: scroll;
     }
 }
 

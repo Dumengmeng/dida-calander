@@ -59,6 +59,8 @@ export default {
             week: NOW.getDay(),                
             month: NOW.getMonth() + 1,
             year: NOW.getFullYear(),
+            dayType1: [31,29,31,30,31,30,31,31,30,31,30,31],
+            dayType2: [31,28,31,30,31,30,31,31,30,31,30,31],
         }
     },
     computed: {
@@ -90,6 +92,9 @@ export default {
     methods: {
         init() {
             this.getBingImg()
+        },
+        isLeapYear(year) {
+            return ( year % 4 == 0 || year % 400 == 0 ) && year % 100 != 0 
         },
         dayType(year) {
             return this.isLeapYear(year) ? this.dayType2 : this.dayType1
@@ -264,6 +269,23 @@ export default {
                 background-size: cover;
                 background-position: center;
                 background-attachment: fixed;
+            }
+
+            .top{
+                margin-bottom: 24px; 
+
+                .now_time{
+                    margin-right: 10px;
+                    font-size: 30px;
+                }
+
+                .countday{
+                    font-size: 20px;
+
+                    i{
+                        margin: 0 4px;
+                    }
+                }
             }
         }
 
