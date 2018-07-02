@@ -3,19 +3,19 @@
         <div class="top">
             <span class="now_time">{{year}}年{{month}}月</span>
             <span class="countday">今年第<i>{{dayCount}}</i>天</span>
-
-            <div class="search_box">
-                <select name="city" id="city" v-model="cityInfo" @change="changeCity()">
-                    <option :value="{cityId: item.id, cityName: item.name}" v-for="(item, index) in cityList" :key="index">{{item.name}}</option>
-                </select>
-                <input class="vir_input" type="text" :placeholder="cityInfo.cityName" @keyup="search()">
-            </div>
         </div>
 
-        <ul class="week">
+        <div class="search_box">
+            <select name="city" id="city" v-model="cityInfo" @change="changeCity()">
+                <option :value="{cityId: item.id, cityName: item.name}" v-for="(item, index) in cityList" :key="index">{{item.name}}</option>
+            </select>
+            <input class="vir_input" type="text" :placeholder="cityInfo.cityName" @keyup="search()">
+        </div>
+
+        <!-- <ul class="week">
             <li v-for="(item, index) in weekArr" :key="index">{{item}}</li>
-        </ul>
-        <ul class="days">
+        </ul> -->
+        <ul class="days" v-show="false">
             <li class="day_item" 
                 :class="{'today_item': item.date === day}"
                 v-for="(item, index) in daysArr" 
@@ -58,11 +58,45 @@
                         <li>降水概率：{{item.pop}}</li> -->
                     </ul>
                 </div>
-
-                
             </li>
         </ul>
 
+        <ul class="w_box">
+            <li class="w_items" v-for="(item, index) in weatherData" :key="index">
+                <span class="w_date">{{new Date(item.date).getDate()}}</span>
+                <i>{{item.tmp_min}}℃ ~ {{item.tmp_max}}℃</i>
+                <i>白天：{{item.cond_txt_d}}</i>
+                <i>夜间：{{item.cond_txt_n}}</i>
+            </li>
+        </ul>
+
+        <div class="g_wrapper">
+            <P class="title">生活指数</P>
+            <ul class="g_box" v-for="(item, index) in guidData" :key="index">
+                <li>
+                    <span v-if="item.type === 'comf'">舒适度指数:</span>
+                    <span v-else-if="item.type === 'cw'">洗车指数:</span>
+                    <span v-else-if="item.type === 'drsg'">穿衣指数:</span>
+                    <span v-else-if="item.type === 'flu'">感冒指数:</span>
+                    <span v-else-if="item.type === 'sport'">运动指数:</span>
+                    <span v-else-if="item.type === 'trav'">旅游指数:</span>
+                    <span v-else-if="item.type === 'uv'">紫外线指数:</span>
+                    <span v-else-if="item.type === 'air'">空气污染扩散条件指数:</span>
+                    <span v-else-if="item.type === 'ac'">空调开启指数:</span>
+                    <span v-else-if="item.type === 'ag'">过敏指数:</span>
+                    <span v-else-if="item.type === 'gl'">太阳镜指数:</span>
+                    <span v-else-if="item.type === 'mu'">化妆指数:</span>
+                    <span v-else-if="item.type === 'airc'">晾晒指数:</span>
+                    <span v-else-if="item.type === 'ptfc'">交通指数:</span>
+                    <span v-else-if="item.type === 'fsh'">钓鱼指数:</span>
+                    <span v-else-if="item.type === 'spi'">防晒指数:</span>
+                    <span>{{item.brf}}</span>
+                    <span>{{item.txt}}</span>
+                </li>
+                <!-- <li>湿度：</li>
+                <li>降水概率：{{item.pop}}</li> -->
+            </ul>
+        </div>
        
     </div>
 </template>
@@ -153,8 +187,9 @@ export default {
                 location: 'CN' + cityId
             }).then(res => {
                 this.weatherData = res.HeWeather6[0].daily_forecast
-                // console.log(this.weatherData)
                 this.guidData = res.HeWeather6[0].lifestyle
+                // console.log(this.weatherData)
+                // console.log(this.guidData)
             })
         },
         showGuidInfo(val, event) {
@@ -243,8 +278,28 @@ export default {
                 z-index: 2;
             }
         }
+    }
+
+    .w_box{
+        display: flex;
+
+        .w_date{
+            display: block;
+        }
 
     }
+
+    .g_wrapper{
+        .title{
+            font-size: 16px;
+        }
+
+        .g_box{
+            overflow-y: scroll;
+        }
+    }
+
+
 
     .days{
         position: fixed;

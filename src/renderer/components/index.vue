@@ -12,9 +12,16 @@
             </div>
         </header>
 
+
         <div class="wrapper" :style="{'background-image': `url(${bingImgUrl})`}">
             <div class="shadow" :class="{'hideBg': isRemoveBg}">
                 <i :class="{'shadow_after': !isRemoveBg}" :style="{'background-image': `url(${bingImgUrl})`}"></i>
+                
+                <div class="top">
+                    <span class="now_time">{{year}}年{{month}}月</span>
+                    <span class="countday">今年第<i>{{dayCount}}</i>天</span>
+                </div>
+
                 <mode-basic v-show="modeType === 1"></mode-basic>
                 <mode-weather v-show="modeType === 2"></mode-weather>
                 <!-- <mode-day v-show="modeType === 3"></mode-day> -->
@@ -32,6 +39,8 @@ import ModeDay from './mode_day'
 import ModeWeather from './mode_weather'
 import axios from 'axios'
 
+const NOW = new Date()
+
 
 // TODO 获取用户的定位 若不进行定位则默认为上海
 // pc端与h5端场景不同，无需自动定位，直接让用户手动选择城市，并将该信息存储起来，若要更改，直接在设置中切换
@@ -46,7 +55,22 @@ export default {
             modeType: 1, // 初始的tab为basic模式
             isMoveTop: false,
             isRemoveBg: false,
+            day: NOW.getDate(),
+            week: NOW.getDay(),                
+            month: NOW.getMonth() + 1,
+            year: NOW.getFullYear(),
         }
+    },
+    computed: {
+        dayCount() {
+            let sum = 0
+            this.dayType(this.year).forEach((item, index) => {
+                if (index < this.month) {
+                    sum += item
+                }
+            })
+            return sum + this.day
+        },
     },
     watch: {
         modeType(val) {
@@ -66,6 +90,9 @@ export default {
     methods: {
         init() {
             this.getBingImg()
+        },
+        dayType(year) {
+            return this.isLeapYear(year) ? this.dayType2 : this.dayType1
         },
         getBingImg() {
             const getBingImgApi = 'https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1'
@@ -110,7 +137,7 @@ export default {
 
     .clean{
         position: absolute;
-        left: 30px;
+        left: 70px;
         top: 50%;
         transform: translateY(-50%);
         border-radius: 50%;
