@@ -40,6 +40,8 @@ import ModeWeather from './mode_weather'
 import axios from 'axios'
 
 const NOW = new Date()
+const { remote } = require('electron')
+const { Menu, MenuItem } = remote
 
 
 // TODO 获取用户的定位 若不进行定位则默认为上海
@@ -83,6 +85,8 @@ export default {
     mounted() {
         this.init()
 
+        this.setItem()        
+
         //测试缓存
         this.$nextTick(() => {
             // console.log(window)
@@ -122,6 +126,33 @@ export default {
         changeMode(type) {
             this.modeType = type
         },
+        setItem() {
+            const menu = new Menu()
+            menu.append(new MenuItem({
+                label: 'sayhi',
+                click() {
+                    alert('Hi~')
+                }
+            }))
+            menu.append(new MenuItem({
+                label: 'check',
+                type: 'checkbox',
+                checked: true
+            }))
+            menu.append(new MenuItem({
+                label: 'zoomin',
+                role: 'zoomin'
+            }))
+            menu.append(new MenuItem({
+                label: 'zoomout',
+                role: 'zoomout'
+            }))
+
+            window.addEventListener('contextmenu', e => {
+                e.preventDefault()
+                menu.popup({window: remote.getCurrentWindow()})
+            }, false)
+        }
     },
     components: {
         'mode-basic': ModeBasic,

@@ -103,6 +103,8 @@ export default {
 <style lang="scss" scoped>
 
 .mode_basic{
+    font-size: 16px;
+
 
     .top{
         margin-bottom: 24px; 
@@ -143,7 +145,7 @@ export default {
 
         .day_item{
             display: inline-block;
-            width: 14.2857%;
+            width: 14.2%;
             // width: 14.1%;
             // border-right: 1px solid #ddd;
             // border-bottom: 1px solid #ddd;

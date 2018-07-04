@@ -158,6 +158,7 @@ export default {
             // 事件节流
             // 可根据拼音、汉字查询
             console.log('keyup')
+            
         },
         _getDaysArrbyGivenMonth(year, month) {
             const dayType = this.dayType(year),
@@ -296,16 +297,18 @@ export default {
     }
  
     .g_wrapper{
-        margin-top: 36px;
+        margin-top: 20px;
 
         .title{
             font-size: 18px;
+            margin: 0;
+            padding: 0;
         }
 
         .g_box{
             position: absolute;
             bottom: 30px;
-            top: 280px;
+            top: 260px;
             left: 20px;
             right: 26px;
             overflow-y: scroll;
